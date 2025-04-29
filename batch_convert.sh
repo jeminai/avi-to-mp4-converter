@@ -1,29 +1,28 @@
 #!/bin/bash
 
-# Check input and output
 if [ -z "$INPUT_DIR" ] || [ -z "$OUTPUT_DIR" ]; then
-    echo "ERROR: No input/output directory provided."
+    echo "Missing input or output path"
     exit 1
 fi
 
-cd "$INPUT_DIR"
+cd "$INPUT_DIR" || exit 1
 
 FILES=(*.avi)
-TOTAL_FILES=${#FILES[@]}
-COUNTER=0
+TOTAL=${#FILES[@]}
+COUNT=0
 
 for file in "${FILES[@]}"; do
     if [[ -f "$file" ]]; then
-        output="${file%.avi}.mp4"
-        ffmpeg -hide_banner -loglevel error -y -hwaccel auto -i "$file" -c:v libx264 -preset ultrafast -crf 23 -c:a aac "$OUTPUT_DIR/$output"
+        OUTPUT_FILE="${file%.avi}.mp4"
+        
+        # Run conversion (suppress all but fatal errors)
+        ffmpeg -y -hide_banner -loglevel error -i "$file" -c:v libx264 -preset ultrafast -crf 23 -c:a aac "$OUTPUT_DIR/$OUTPUT_FILE"
 
-        COUNTER=$((COUNTER + 1))
-        PERCENT=$((COUNTER * 100 / TOTAL_FILES))
-
+        COUNT=$((COUNT + 1))
+        PERCENT=$((COUNT * 100 / TOTAL))
         echo "$PERCENT"
     fi
 done
 
-# 100% just in case
-echo "100"
-
+# Ensure it ends at 100%
+echo 100
