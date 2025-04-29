@@ -40,14 +40,21 @@ fi
 # Start Docker container with both volumes mounted
 (
     docker run --rm -i \
+        --runtime nvidia \
+        -e DISPLAY=$DISPLAY \
+        -v /tmp/.X11-unix:/tmp/.X11-unix \
         -v "$INPUT_DIR":/input \
         -v "$OUTPUT_DIR":/output \
         -e INPUT_DIR=/input \
         -e OUTPUT_DIR=/output \
         avi-to-mp4-converter
-) | zenity --progress --title="🔄 Converting Videos..." \
-    --text="Starting batch conversion..." --percentage=0 --width=500 --auto-close --auto-kill
-
+) | zenity --progress \
+    --title="🔄 Converting AVI to MP4..." \
+    --text="Starting conversion..." \
+    --percentage=0 \
+    --width=500 \
+    --auto-close \
+    --auto-kill
 # Final message
 zenity --info --title="🎉 Conversion Complete!" \
 --width=400 --text="All AVI files have been converted and saved to:\n\n$OUTPUT_DIR"
