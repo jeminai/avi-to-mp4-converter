@@ -19,9 +19,11 @@ A fast, elegant, and user-friendly batch video converter that transforms `.avi` 
 ### 1. Clone the repo:
 ```bash
 git clone https://github.com/jeminai/avi-to-mp4-converter.git && cd avi-to-mp4-converter
+
 ### 2. build the Docker Image:
 '''bash
-docker build -t avi-to-mp4-converter
+docker build -t avi-to-mp4-converter .
+
 ### 3. Run the converter:
 '''bash
 run_converter.sh
